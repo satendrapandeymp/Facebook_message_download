@@ -1,6 +1,5 @@
 from fbchat import Client, log
 from getpass import getpass
-from reply import reply
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
