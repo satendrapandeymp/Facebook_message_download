@@ -37,31 +37,33 @@ def do_rest(thread):
 					file.write(other + ' -- ' + message.text.encode('utf-8') + ' \n' )
 			if message.attachments:
 				# For Images and other kind of attachments
-				Filename = message.attachments[0]['filename']
-				if  Filename.split("-")[0] == 'image':
-					add = message.attachments[0]['large_preview']['uri']
-					name = folder_name +"\\images\\"+message.attachments[0]['filename']+'.'+message.attachments[0]['original_extension']
-					urllib.urlretrieve(add, name)
-				elif len(Filename.split(".")) > 1 and Filename.split(".")[1] in docs:
-					add = message.attachments[0]['url']
-					test = urllib.urlopen(add)
-					temp = test.read().split('replace("')[1]
-					temp = temp.split('");</script>')[0]
-					temp = temp.replace("\\","")
-					Filename = folder_name + "\\docs\\" + Filename
-					urllib.urlretrieve(temp, Filename)
-				elif len(Filename.split(".")) > 1 and Filename.split(".")[1] in media:
-					add = message.attachments[0]['playable_url']
-					Filename = folder_name + "\\media\\" + Filename
-					urllib.urlretrieve(add, Filename)
-				else:
-					add = message.attachments[0]['url']
-					test = urllib.urlopen(add)
-					temp = test.read().split('replace("')[1]
-					temp = temp.split('");</script>')[0]
-					temp = temp.replace("\\","")
-					Filename = folder_name + "\\Random\\" + Filename
-					urllib.urlretrieve(temp, Filename)
+				for attachment in message.attachments:
+				# For Image
+					Filename = attachment['filename']
+					if  Filename.split("-")[0] == 'image':
+						add = attachment['large_preview']['uri']
+						name = folder_name +"\\images\\"+ attachment['filename']+'.'+attachment['original_extension']
+						urllib.urlretrieve(add, name)
+					elif len(Filename.split(".")) > 1 and Filename.split(".")[1] in docs:
+						add = attachment['url']
+						test = urllib.urlopen(add)
+						temp = test.read().split('replace("')[1]
+						temp = temp.split('");</script>')[0]
+						temp = temp.replace("\\","")
+						Filename = folder_name + "\\docs\\" + Filename
+						urllib.urlretrieve(temp, Filename)
+					elif len(Filename.split(".")) > 1 and Filename.split(".")[1] in media:
+						add = attachment['playable_url']
+						Filename = folder_name + "\\media\\" + Filename
+						urllib.urlretrieve(add, Filename)
+					else:
+						add = attachment['url']
+						test = urllib.urlopen(add)
+						temp = test.read().split('replace("')[1]
+						temp = temp.split('");</script>')[0]
+						temp = temp.replace("\\","")
+						Filename = folder_name + "\\Random\\" + Filename
+						urllib.urlretrieve(temp, Filename)
 		file.close()
 
 	return True
@@ -96,11 +98,11 @@ username = str(raw_input("want to download messages from a specific friend type(
 number = int(raw_input("Maximum number of messages from 1 person: "))
 
 if username.lower() == 'y':
-	name = str(raw_input("Name of that friend: "))
-	thread = client.searchForThreads(name)[0]
-	print thread
-	do_rest(thread)
-
+	names = str(raw_input("Name of that friends separated by a comma like - satyendra pandey, Narendra pandey ,... , ... "))
+	names = names.split(',')
+	for name in names:
+		thread = client.searchForThreads(name)[0]
+		do_rest(thread)
 else: 
 
 	num = int(raw_input("Number of frieds messages you wanna download from your inbox top : "))
