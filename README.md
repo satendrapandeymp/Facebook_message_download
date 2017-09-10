@@ -1,6 +1,6 @@
-# Facebook_message_download
+# Facebook_message_download 
 You can download your facebook messages using this
-Install fbchat module using PIP (#pip install fbchat) or by downloading it through github
+Install fbchat module using PIP (#pip install fbchat) or by downloading it through github, PYTHON -- 2.x
 
 #Basic -- Message.py
 Put your facebook username and password and number of friends in your message history.
