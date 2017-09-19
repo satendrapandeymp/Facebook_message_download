@@ -1,7 +1,7 @@
 from fbchat import Client, log
 from getpass import getpass
 from datetime import datetime
-import sys, os, urllib, time, socket, shutil
+import sys, os, urllib, time, socket, shutil, pyminizip
 from glob import glob
 from zipfile import ZipFile
 
@@ -25,12 +25,21 @@ media = ['mp3', 'mp4', 'aac', 'webm', 'avi', '3gp']
 gen = ['jpg', 'png']
 
 def make_zip():
+	file = open('instruction.txt', 'w')
+	file.write("Use your facebook password to decrypt Fb_Data.zip file")
+	file.close()
 	files = glob("Data/*/*/*")
 	zipfile = ZipFile("Fb_Data.zip", 'w')
 	for file in files:
 		zipfile.write(file)
 	zipfile.close()
 	shutil.rmtree("Data")
+	pyminizip.compress("Fb_Data.zip", "Data.zip", password, 3)
+	os.remove('Fb_Data.zip')
+	zipfile = ZipFile("Data.zip", 'a')
+	zipfile.write('instruction.txt')
+	zipfile.close()
+	os.remove('instruction.txt')
 
 def do_rest(thread):
 	data = str(thread).split(" ")
