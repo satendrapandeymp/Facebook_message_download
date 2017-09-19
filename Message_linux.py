@@ -1,7 +1,9 @@
 from fbchat import Client, log
 from getpass import getpass
 from datetime import datetime
-import sys, os, urllib, time, socket
+import sys, os, urllib, time, socket, shutil
+from glob import glob
+from zipfile import ZipFile
 
 socket.setdefaulttimeout(60)
 reload(sys)
@@ -12,6 +14,8 @@ password = getpass()
 
 client = Client(username, password)
 
+zipping = str(raw_input("Want to save your data as a .Zip file y/n?: "))
+
 uid = client.uid
 USER = client.fetchUserInfo(client.uid)[client.uid]
 self = USER.name
@@ -20,13 +24,22 @@ docs = ['docx', 'doc', 'pdf', 'pptx', 'txt', 'xlsx']
 media = ['mp3', 'mp4', 'aac', 'webm', 'avi', '3gp']
 gen = ['jpg', 'png']
 
+def make_zip():
+	files = glob("Data/*/*/*")
+	zipfile = ZipFile("Fb_Data.zip", 'w')
+	for file in files:
+		zipfile.write(file)
+	zipfile.close()
+	shutil.rmtree("Data")
+
 def do_rest(thread):
 	data = str(thread).split(" ")
 	if len(data) == 4:
 		other = data[1] +  " " + data[2]
 		id = data[3].split('(')[1].split(')')[0]
-		folder_name = "Data/" + str(data[1]) + '_' + str(data[2])
+		folder_name = str(data[1]) + '_' + str(data[2])
 		Testing = Path_check(folder_name)
+		folder_name = "Data/" + str(data[1]) + '_' + str(data[2])
 		filename = folder_name+"/" + str(data[1]) + '_' + str(data[2]) + ".txt"
 		file = open(filename, 'wb')
 		flag = 1000
@@ -91,7 +104,7 @@ def do_rest(thread):
 								print "Getting some error now on url -: ", temp
 			flag = len(messages)
 			num += flag
-			print num, " messages had been downloaded from today till - ",datetime.utcfromtimestamp(timestamp).strftime('%d-%m-%Y')
+			print num, " messages had been downloaded from today till - ",datetime.utcfromtimestamp(float(timestamp)/1000).strftime('%d-%m-%Y')
 		file.close()
 
 
@@ -133,9 +146,10 @@ if username.lower() == 'y':
 	for name in names:
 		thread = client.searchForThreads(name)[0]
 		do_rest(thread)
+	if zipping.lower() == 'y':
+		make_zip()
 
 else:
-
 	num = int(raw_input("Number of friends from top of your chatlist:"))
 	if num < 20:
 		threads = client.fetchThreadList(limit = num)
@@ -150,3 +164,5 @@ else:
 
 	for thread in threads:
 		do_rest(thread)
+	if zipping.lower() == 'y':
+		make_zip()
