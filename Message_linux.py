@@ -70,12 +70,21 @@ def do_rest(thread):
 			messages = client.fetchThreadMessages(thread_id=id, limit=1000, before=timestamp)
 			timestamp = messages[len(messages)-1].timestamp
 			for message in messages:
-				if message.text is not None:
-					if message.author == uid:
-						file.write(self + ' -- ' + message.text.encode('utf-8') + ' \n' )
-					else:
-						file.write(other + ' -- ' + message.text.encode('utf-8') + ' \n' )
-				if message.attachments:
+
+				if message.extensible_attachment:
+					if message.extensible_attachment['story_attachment']['media']:
+						if message.extensible_attachment['story_attachment']['media']['is_playable']:
+							add = message.extensible_attachment['story_attachment']['media']['playable_url']
+							Filename = folder_name + "/shares/" + str(message.timestamp)  + '.mp4'
+							if add is not None:
+								try:
+									urllib.urlretrieve(add, Filename)
+								except:
+									print "Getting some error now on url -: ", add
+							else:
+								print message.extensible_attachment
+
+				elif message.attachments:
 					for attachment in message.attachments:
 					# For Image
 						time.sleep(.1)
@@ -123,6 +132,13 @@ def do_rest(thread):
 								urllib.urlretrieve(temp, Filename)
 							except:
 								print "Getting some error now on url -: ", temp
+
+				elif message.text is not None:
+					if message.author == uid:
+						file.write(self + ' -- ' + message.text + ' \n' )
+					else:
+						file.write(other + ' -- ' + message.text + ' \n' )
+
 			flag = len(messages)
 			num += flag
 			print num, " messages had been downloaded from today till - ",datetime.utcfromtimestamp(float(timestamp)/1000).strftime('%d-%m-%Y')
@@ -150,6 +166,10 @@ def Path_check(name):
 		os.mkdir(path)
 
 	path = name + "/media"
+	if not os.path.exists(path):
+		os.mkdir(path)
+
+	path = name + "/shares"
 	if not os.path.exists(path):
 		os.mkdir(path)
 
