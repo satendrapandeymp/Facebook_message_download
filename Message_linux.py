@@ -43,86 +43,25 @@ def make_zip():
 
 def do_rest(thread):
 	data = str(thread).split(" ")
-	if len(data) == 4:
-		other = data[1] +  " " + data[2]
-		id = data[3].split('(')[1].split(')')[0]
-		folder_name = str(data[1]) + '_' + str(data[2])
-		Testing = Path_check(folder_name)
-		folder_name = "Data/" + str(data[1]) + '_' + str(data[2])
-		filename = folder_name+"/" + str(data[1]) + '_' + str(data[2]) + ".txt"
-		file = open(filename, 'wb')
-		flag = 1000
-		num = 0
-		timestamp = int(19800 + time.time())*1000
-		while( flag > 999):
-			messages = client.fetchThreadMessages(thread_id=id, limit=1000, before=timestamp)
-			timestamp = messages[len(messages)-1].timestamp
-			for message in messages:
-				if message.text is not None:
-					if message.author == uid:
-						file.write(self + ' -- ' + message.text.encode('utf-8') + ' \n' )
-					else:
-						file.write(other + ' -- ' + message.text.encode('utf-8') + ' \n' )
-				if message.attachments:
-					for attachment in message.attachments:
-					# For Image
-						time.sleep(.1)
-						Filename = attachment['filename']
-						if  Filename.split("-")[0] == 'image':
-							add = attachment['large_preview']['uri']
-							name = folder_name +"/images/"+ attachment['filename']+'.' +attachment['original_extension']
-							try:
-								urllib.urlretrieve(add, name)
-							except:
-								print "Getting some error now on url -: ", add
-						elif len(Filename.split(".")) > 1 and Filename.split(".")[len(Filename.split("."))-1] in docs:
-							add = attachment['url']
-							test = urllib.urlopen(add)
-							temp = test.read().split('replace("')[1]
-							temp = temp.split('");</script>')[0]
-							temp = temp.replace("\\","")
-							Filename = folder_name + "/docs/" + Filename
-							try:
-								urllib.urlretrieve(temp, Filename)
-							except:
-								print "Getting some error now on url -: ", temp
-						elif len(Filename.split(".")) > 1 and Filename.split(".")[len(Filename.split("."))-1] in media:
-							add = attachment['playable_url']
-							Filename = folder_name + "/media/" + Filename
-							try:
-								urllib.urlretrieve(add, Filename)
-							except:
-								print "Getting some error now on url -: ", add
-						elif Filename.split("-")[0] == 'gif':
-							add = attachment['animated_image']['uri']
-							Filename = folder_name + "/media/" + Filename
-							try:
-								urllib.urlretrieve(add, Filename)
-							except:
-								print "Getting some error now on url -: ", add
-						else:
-							add = attachment['url']
-							test = urllib.urlopen(add)
-							temp = test.read().split('replace("')[1]
-							temp = temp.split('");</script>')[0]
-							temp = temp.replace("\\","")
-							Filename = folder_name + "/Random/" + Filename
-							try:
-								urllib.urlretrieve(temp, Filename)
-							except:
-								print "Getting some error now on url -: ", temp
-			flag = len(messages)
-			num += flag
-			print num, " messages had been downloaded from today till - ",datetime.utcfromtimestamp(float(timestamp)/1000).strftime('%d-%m-%Y')
-		file.close()
+	if 1==1:
 
-	if len(data) == 3:
-		other = data[1]
-		id = data[2].split('(')[1].split(')')[0]
-		folder_name = str(data[1]) 
-		Testing = Path_check(folder_name)
-		folder_name = "Data/" + str(data[1]) 
-		filename = folder_name+"/" + str(data[1]) + ".txt"
+		id = data[len(data)-1].split('(')[1].split(')')[0]
+
+		if len(data) == 4:
+			other = data[1] +  " " + data[2]
+			name = str(data[1]) + '_' + str(data[2])
+
+		if len(data) == 3:
+			other = data[1]
+			name = str(data[1])
+
+		if len(data) == 5:
+			other = data[1] +  " " + data[2] +  " " + data[3]
+			name = data[1] + '_' + data[2]  + '_' + data[3]
+
+		Testing = Path_check(other)
+		folder_name = "Data/" + other
+		filename = folder_name+"/" + name + ".txt"
 		file = open(filename, 'wb')
 		flag = 1000
 		num = 0
