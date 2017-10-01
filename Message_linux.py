@@ -22,6 +22,9 @@ uid = client.uid
 USER = client.fetchUserInfo(client.uid)[client.uid]
 self = USER.name
 
+ID = []
+NAME = []
+
 docs = ['docx', 'doc', 'pdf', 'pptx', 'txt', 'xlsx']
 media = ['mp3', 'mp4', 'aac', 'webm', 'avi', '3gp']
 gen = ['jpg', 'png']
@@ -61,24 +64,33 @@ def make_zip():
 	os.remove('instruction.txt')
 
 def do_rest(thread):
+	check = 0
 	data = str(thread).split(" ")
 
 	id = data[len(data)-1].split('(')[1].split(')')[0]
 
-	other = 'Unknown'
-	name = 'Unknown'
+	other = data[1]
+	name = str(data[1])
 
 	if len(data) == 4:
 		other = data[1] +  " " + data[2]
 		name = str(data[1]) + '_' + str(data[2])
 
-	if len(data) == 3:
-		other = data[1]
-		name = str(data[1])
-
 	if len(data) == 5:
 		other = data[1] +  " " + data[2] +  " " + data[3]
 		name = data[1] + '_' + data[2]  + '_' + data[3]
+
+	if len(data) == 6:
+		other = data[1] +  " " + data[2] +  " " + data[3] +  " " + data[4] 
+		name = data[1] + '_' + data[2]  + '_' + data[3] +  '_' + data[4] 
+
+
+	if str(data[0]) != '<GROUP':
+		ID.append(id)
+		NAME.append(other)
+		check = 1
+
+	print "downloading messages from Group/User/Page -: ", other
 
 	starting = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> <title>' + other + '- Messages</title> <link rel="stylesheet" href="../../style.css" type="text/css" /></head><body> <div class="contents"><h1>' + other +'</h1> <div class="thread"> Total number of messages = ' + str(thread.message_count)
 
@@ -98,6 +110,18 @@ def do_rest(thread):
 		timestamp = messages[len(messages)-1].timestamp
 
 		for message in messages:
+
+			if check == 0:
+				if message.author not in ID:
+					USER = client.fetchUserInfo(message.author)[message.author]
+					other = USER.name
+					ID.append(message.author)
+					NAME.append(other)
+				else:
+					for i in range(len(ID)):
+						if message.author == ID[i]:
+							other = NAME[i]
+							break
 
 			if message.extensible_attachment:
 				if message.extensible_attachment['story_attachment']['media']:
@@ -228,7 +252,6 @@ def do_rest(thread):
 	file.write(ending)
 	file.close()
 
-
 def Path_check(name):
 
 	path = "Data"
@@ -295,11 +318,11 @@ else:
 		threads = client.fetchThreadList(limit = num)
 
 	else:
-		threads = client.fetchThreadList(limit = 20)
+		threads = client.fetchThreadList( offset = 26, limit = 14)
 		num = (num-20)/20
 
 		for i in range(num):
-			offset = 20*(i+1)
+			offset = 20*(i+1+1)
 			threads += client.fetchThreadList(offset = offset, limit= 20)
 
 	for thread in threads:
