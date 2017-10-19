@@ -9,7 +9,7 @@ socket.setdefaulttimeout(60)
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-ending = '</div></div>'
+ending = '</div></div>%#@'
 
 username = str(raw_input("Username: "))
 password = getpass()
@@ -65,9 +65,28 @@ def make_zip():
 
 def do_rest(thread):
 	check = 0
+	timestampbackup = int(19800 + time.time())*100
 	data = str(thread).split(" ")
 
 	id = data[len(data)-1].split('(')[1].split(')')[0]
+
+	logfile = open('log.txt', 'rb')
+	backup = logfile.read()
+	backup = backup.split('\n')
+	for test in backup:
+		bakupdata = test.split(' ')
+		if len(bakupdata)>1:
+			idbackup = bakupdata[0]
+			if idbackup == id:
+				timestampbackup = float(bakupdata[1])
+				backup.remove(test)
+				break
+	logfile.close()
+
+	logfile = open('log.txt', 'wb')
+	for test in backup:	
+		logfile.write(test + '\n')
+	logfile.close()
 
 	other = data[1]
 	name = str(data[1])
@@ -90,26 +109,40 @@ def do_rest(thread):
 		NAME.append(other)
 		check = 1
 
+	if other == '' or other == ' ' or name == '' or name == ' ' :
+		other = 'Group_' + str(id)
+		name = 'Group_' + str(id)
+
 	print "downloading messages from Group/User/Page -: ", other
 
-	starting = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> <title>' + other + '- Messages</title> <link rel="stylesheet" href="../../style.css" type="text/css" /></head><body> <div class="contents"><h1>' + other +'</h1> <div class="thread"> Total number of messages = ' + str(thread.message_count)
+	starting = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> <title>' + other + '- Messages</title> <link rel="stylesheet" href="../../style.css" type="text/css" /></head><body> <div class="contents"><h1>' + other +'</h1> <div class="thread"> Total number of messages = ' + str(thread.message_count) + '____\n'
 
 
 	Testing = Path_check(other)
 	folder_name = "Data/" + other
 	log_file = folder_name+"/" + name + ".txt"
-	filename = folder_name+"/html/" + name + ".htm"
-	file = open(filename, 'wb')
 	Log_file = open(log_file, 'wb')
-	file.write(starting)
-	flag = 1000
+	filename = folder_name+"/html/" + name + ".htm"
+	filenametxt = folder_name+"/html/" + name + ".txt"
+	file = open(filenametxt, 'wb')
+
+	flag = 100
 	num = 0
 	timestamp = int(19800 + time.time())*1000
-	while( flag > 999):
-		messages = client.fetchThreadMessages(thread_id=id, limit=1000, before=timestamp)
-		timestamp = messages[len(messages)-1].timestamp
 
+	log = str(id) + ' ' + str(timestamp-19800) + '\n'
+
+	while( flag > 99):
+		messages = client.fetchThreadMessages(thread_id=id, limit=100, before=timestamp)
+		timestamp = messages[len(messages)-1].timestamp
+		flag = len(messages)
+		num += flag
 		for message in messages:
+
+			if int(message.timestamp) < timestampbackup:
+				print 'old message than ' + datetime.utcfromtimestamp(float(timestampbackup)/1000).strftime('%d-%m-%Y') +' has been already downloaded'
+				flag = 0
+				break
 
 			if check == 0:
 				if message.author not in ID:
@@ -246,11 +279,33 @@ def do_rest(thread):
 					file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
 					file.write('</span></div></div><p>' + message.text + ' </p> \n' )
 
-		flag = len(messages)
-		num += flag
 		print num, " messages had been downloaded from today till - ",datetime.utcfromtimestamp(float(timestamp)/1000).strftime('%d-%m-%Y')
-	file.write(ending)
+
 	file.close()
+	
+	logfile = open('log.txt', 'a')
+	logfile.write(log)
+	logfile.close()
+
+	file = open(filenametxt, 'rb')
+	latest = file.read()
+	final = latest
+	file.close()	
+
+	if os.path.exists(filename):
+		file_htm = open(filename, 'rb')
+		final = file_htm.read()
+		final = final.split('</h1> <div class="thread"> Total number of messages = ')[1]
+		final = final.split('____\n')[1]
+		final = final.split(ending)[0]
+		final = latest + final
+		file_htm.close()
+
+	file_htm = open(filename, 'wb')
+	file_htm.write(starting)
+	file_htm.write(final)
+	file_htm.write(ending)
+	file_htm.close()
 
 def Path_check(name):
 
@@ -318,11 +373,11 @@ else:
 		threads = client.fetchThreadList(limit = num)
 
 	else:
-		threads = client.fetchThreadList( offset = 26, limit = 14)
+		threads = client.fetchThreadList( limit = 20)
 		num = (num-20)/20
 
 		for i in range(num):
-			offset = 20*(i+1+1)
+			offset = 20*(i+1)
 			threads += client.fetchThreadList(offset = offset, limit= 20)
 
 	for thread in threads:
