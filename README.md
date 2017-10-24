@@ -9,3 +9,7 @@ It will download messages of all the friends you selected and you can see that i
 
 #Message_windows/linux.py
 In this one you can download message from a friens and all the attachment sent or received as well as you can set number of messages need to be downloaded/ number of friends whom message you wanna download
+
+Note -- install using requirement.txt
+pip install -r requirement.txt
+and remeber to install fbchat 1.0.25 version, updated versions don't support many features.
