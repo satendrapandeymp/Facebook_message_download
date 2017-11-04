@@ -157,6 +157,16 @@ def do_rest(thread):
 							break
 
 			if message.extensible_attachment:
+
+				if message.author == uid:
+					file.write('<div class="message"><div class="message_header"><span class="user">' + self +  ' </span><span class="meta"> ')
+					file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
+					file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
+				else:
+					file.write('<div class="message"><div class="message_header"><span class="user">' + other +  ' </span><span class="meta"> ')
+					file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
+					file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
+
 				if message.extensible_attachment['story_attachment']['media']:
 					if message.extensible_attachment['story_attachment']['media']['is_playable']:
 						add = message.extensible_attachment['story_attachment']['media']['playable_url']
