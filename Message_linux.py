@@ -37,11 +37,11 @@ def download_file(add, name):
 	    # Walk through the request response in chunks of 1024 * 1024 bytes, so 1MiB
 	    for chunk in request.iter_content(1024 * 1024):
 	        # Write the chunk to the file
-			flag += 1
-			if flag > 10:
-				break
-				Log_file.write("This file is bigger than 10MB so download it if you want-- " + add + '\n\n')
-			fh.write(chunk)
+		flag += 1
+		if flag > 10:
+			Log_file.write("This file is bigger than 10MB so download it if you want-- " + add + '\n\n')
+			break
+		fh.write(chunk)
 
 def make_zip():
 	file = open('instruction.txt', 'w')
@@ -157,15 +157,19 @@ def do_rest(thread):
 							break
 
 			if message.extensible_attachment:
+				
+				if message.extensible_attachment['story_attachment']['url']:
+				
 
-				if message.author == uid:
-					file.write('<div class="message"><div class="message_header"><span class="user">' + self +  ' </span><span class="meta"> ')
-					file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
-					file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
-				else:
-					file.write('<div class="message"><div class="message_header"><span class="user">' + other +  ' </span><span class="meta"> ')
-					file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
-					file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
+					if message.author == uid:
+						file.write('<div class="message"><div class="message_header"><span class="user">' + self +  ' </span><span class="meta"> ')
+						file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
+						file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
+					else:
+						file.write('<div class="message"><div class="message_header"><span class="user">' + other +  ' </span><span class="meta"> ')
+						file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
+						file.write('</span></div></div><p>' + message.extensible_attachment['story_attachment']['url'] + ' </p> \n' )
+				
 
 				if message.extensible_attachment['story_attachment']['media']:
 					if message.extensible_attachment['story_attachment']['media']['is_playable']:
@@ -183,7 +187,7 @@ def do_rest(thread):
 									file.write(str(datetime.fromtimestamp(float(int(message.timestamp)/1000))))
 									file.write('</span></div></div><p> <video width="500" controls> <source src="../../../' + Filename + '" type="video/mp4"></p> \n' )
 							except:
-								 Log_file.write("Getting some error now on url -: " +  add + '\n\n')
+								Log_file.write("Getting some error now on url -: " +  add + '\n\n')
 						else:
 							Log_file.write("Look at this separately--" + str(message.extensible_attachment) + '\n\n')
 
@@ -229,8 +233,8 @@ def do_rest(thread):
 							Log_file.write( "Getting some error now on url -: " + temp  + '\n\n')
 					elif len(Filename.split(".")) > 1 and Filename.split(".")[len(Filename.split("."))-1] in media:
 						try:
-                            add = attachment['playable_url']
-						    Filename = folder_name + "/media/" + Filename
+							add = attachment['playable_url']
+							Filename = folder_name + "/media/" + Filename
 							download_file(add, Filename)
 							if message.author == uid:
 								file.write('<div class="message"><div class="message_header"><span class="user">' + self +  ' </span><span class="meta"> ')
@@ -331,7 +335,7 @@ def Path_check(name):
 	except IOError as e:
 		print("Unable to copy file. %s" % e)
 	except:
-	    Log_file.write(("Unexpected error:" +  str(sys.exc_info())))
+		Log_file.write(("Unexpected error:" +  str(sys.exc_info())))
 
 	name = path + '/' +name
 
