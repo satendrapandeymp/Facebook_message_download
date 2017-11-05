@@ -228,9 +228,9 @@ def do_rest(thread):
 						except:
 							Log_file.write( "Getting some error now on url -: " + temp  + '\n\n')
 					elif len(Filename.split(".")) > 1 and Filename.split(".")[len(Filename.split("."))-1] in media:
-						add = attachment['playable_url']
-						Filename = folder_name + "/media/" + Filename
 						try:
+                            add = attachment['playable_url']
+						    Filename = folder_name + "/media/" + Filename
 							download_file(add, Filename)
 							if message.author == uid:
 								file.write('<div class="message"><div class="message_header"><span class="user">' + self +  ' </span><span class="meta"> ')
