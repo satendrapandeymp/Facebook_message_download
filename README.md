@@ -1,13 +1,26 @@
-# Facebook_message_download 
-You can download your facebook messages using this
-Note -- install using requirement.txt
+# Facebook_message_download
+You can download your facebook messages using this.
+Here it's how gonna look.
+
+## For a Person
+
+<img src= Extras/exp1.png >
+
+### Here is how it's gonna look for shared Images --
+<img src= Extras/exp1.png >
+
+## Installation
+Use following command to install other dependency
+
+```bash
 pip install -r requirement.txt
-and remeber to install fbchat 1.0.25 version, updated versions don't support many features.
+```
+and remeber to ***install fbchat 1.0.25 version***, updated versions don't support many features.
 
-#Basic -- Message_linux.py
-Put your facebook username and password and simple follow the instructions given on command prompt or terminal.
+### For Linux or Windows
 
-It will download messages of all the friends you selected and you can see that in 'Data' folder if you had not choosen to zip else you can download see that after extracting Fb_data.zip file. Zip file is easier to store or share and also it can be protected with password rather than your simple folder/file structure.
+Just run Message_linux.py for Linux and Message_windows.py for Windows, it will download all kind of attachments.
 
-#Message_windows/linux.py
-In this one you can download message from a friens and all the attachment sent or received as well as you can set number of messages need to be downloaded/ number of friends whom message you wanna download
+## A helping video for people with other background
+
+[![Watch the video](screenshots/youtube.png)](https://www.youtube.com/watch?v=xW2hpkoaIiM)
