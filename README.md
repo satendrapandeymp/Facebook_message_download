@@ -23,4 +23,4 @@ Just run Message_linux.py for Linux and Message_windows.py for Windows, it will 
 
 ## A helping video for people with other background
 
-[![Watch the video](Extras/youtube.png)](https://www.youtube.com/watch?v=xW2hpkoaIiM)
+[![Watch the video](Extras/youtube.png)](https://youtu.be/uaZFDMzV8qc)
