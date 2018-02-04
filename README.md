@@ -7,7 +7,7 @@ Here it's how gonna look.
 <img src= Extras/exp1.png >
 
 ### Here is how it's gonna look for shared Images --
-<img src= Extras/exp1.png >
+<img src= Extras/exp2.png >
 
 ## Installation
 Use following command to install other dependency
@@ -23,4 +23,4 @@ Just run Message_linux.py for Linux and Message_windows.py for Windows, it will 
 
 ## A helping video for people with other background
 
-[![Watch the video](screenshots/youtube.png)](https://www.youtube.com/watch?v=xW2hpkoaIiM)
+[![Watch the video](Extras/youtube.png)](https://www.youtube.com/watch?v=xW2hpkoaIiM)
