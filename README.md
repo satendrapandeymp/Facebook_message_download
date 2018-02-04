@@ -7,7 +7,7 @@ Here it's how gonna look.
 <img src= Extras/exp1.png >
 
 ### Here is how it's gonna look for shared Images --
-<img src= Extras/exp2.png >
+<img src= Extras/ecp2.png >
 
 ## Installation
 Use following command to install other dependency
