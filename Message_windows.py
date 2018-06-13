@@ -37,11 +37,11 @@ def download_file(add, name):
 	    # Walk through the request response in chunks of 1024 * 1024 bytes, so 1MiB
 	    for chunk in request.iter_content(1024 * 1024):
 	        # Write the chunk to the file
-			flag += 1
-			if flag > 10:
-				Log_file.write("This file is bigger than 10MB so download it if you want-- " + add + '\n\n')
-				break
-			fh.write(chunk)
+		flag += 1
+		if flag > 10:
+			Log_file.write("This file is bigger than 10MB so download it if you want-- " + add + '\n\n')
+			break
+		fh.write(chunk)
 
 def make_zip():
 	file = open('instruction.txt', 'w')
